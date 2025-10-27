@@ -21,17 +21,29 @@ router.post('/authenticate', Express.json(), (req, res) => {
     const { username, password } = req.body;
     const user = users.find(u => u.username === username && u.password === password);
     if (user) {
-        res.json(user);
+        const { password, ...userWithoutPassword } = user;
+        res.json(userWithoutPassword);
     } else {
         res.status(401).json({ error: "Invalid credentials" });
     }
 });
 
-router.get('/get/:id', (req, res) => {
+router.get('/:id/get', (req, res) => {
     const id = parseInt(req.params.id);
     const user = users.find(u => u.id === id);
     if (user) {
-        res.json(user);
+        const { password, ...userWithoutPassword } = user;
+        res.json(userWithoutPassword);
+    } else {
+        res.status(404).json({ error: "User not found" });
+    }
+});
+
+router.get('/:id/get/username', (req, res) => {
+    const id = parseInt(req.params.id);
+    const user = users.find(u => u.id === id);
+    if (user) {
+        res.json(user.username);
     } else {
         res.status(404).json({ error: "User not found" });
     }

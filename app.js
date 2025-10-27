@@ -5,7 +5,7 @@ const app = Express();
 
 app.use(Express.json());
 
-app.use('/users', UserRoute);
+app.use('/user', UserRoute);
 
 app.listen(3000, '0.0.0.0', () => {
     console.log('Server is running on port 3000 on all interfaces')
