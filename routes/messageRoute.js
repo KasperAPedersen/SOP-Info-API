@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import models from '../orm/models.js';
 
-
 const router = Router();
 
 router.get('/init', async (req, res) => {
