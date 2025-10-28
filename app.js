@@ -1,9 +1,12 @@
 import Express from 'express';
+import morgan from 'morgan';
+
 import UserRoute from './routes/userRoute.js';
 
 const app = Express();
 
 app.use(Express.json());
+app.use(morgan("dev"));
 
 app.use('/user', UserRoute);
 
