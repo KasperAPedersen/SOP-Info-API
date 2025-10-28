@@ -1,26 +1,43 @@
 import { Router } from 'express';
+import models from '../orm/models.js';
+
+
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/init', async (req, res) => {
+    try {
+        const message = await models.Message.findAll();
+
+        if(message.length > 0) return res.json({ success: true });
+
+        await models.Message.bulkCreate([
+            { sender_id: 1, title: "Hello", message: "Hello World" },
+            { sender_id: 1, title: "Hello", message: "Hello World" },
+            { sender_id: 1, title: "Hello", message: "Hello World" },
+            { sender_id: 1, title: "Hello", message: "Hello World" },
+            { sender_id: 1, title: "Hello", message: "Hello World" },
+            { sender_id: 1, title: "Hello", message: "Hello World" },
+        ]);
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.get('/get', async (req, res) => {
+    const messages = await models.Message.findAll();
     res.json(messages);
 });
 
-router.get('/get/:id', (req, res) => {
+router.get('/:id/get', async (req, res) => {
     const id = parseInt(req.params.id);
-    const msg = messages.find(m => m.id === id);
-    if (msg) return res.json(msg);
-    res.status(404).json({ error: "Message not found" });
-});
-
-router.post('/', (req, res) => {
-    const { sender, subject, body } = req.body || {};
-    if (!sender || !subject || !body) {
-        return res.status(400).json({ error: "sender, subject and body are required" });
+    const msg = await models.Message.findByPk(id);
+    if (!msg) {
+        return res.status(404).json({ error: "Message not found" });
     }
-    const id = messages.length ? Math.max(...messages.map(m => m.id)) + 1 : 1;
-    const msg = new Message(id, sender, "just now", subject, body);
-    messages.push(msg);
-    res.status(201).json(msg);
+    res.json(msg);
 });
 
 export default router;
