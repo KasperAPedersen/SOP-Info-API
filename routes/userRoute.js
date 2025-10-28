@@ -1,17 +1,37 @@
 import Express, { Router } from 'express';
+import bcrypt from 'bcryptjs';
 import models from '../orm/models.js';
 
 const router = Router();
 
 router.use(Express.json());
 
+router.get('/init', async (req, res) => {
+    try {
+        await models.User.bulkCreate([
+            { username: 'user1', password: await bcrypt.hash('pass1', 10), firstName: 'Johnny', lastName: 'Doe', consent: true },
+            { username: 'user2', password: await bcrypt.hash('pass2', 10), firstName: 'Jane', lastName: 'Smith', consent: false }
+        ]);
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 router.post('/authenticate', async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        const user = await models.User.findOne({ where: { username, password } });
+        const user = await models.User.findOne({ where: { username } });
         if (!user) {
-            return res.status(401).json({ error: "Invalid credentials" });
+            return res.status(401).json({ error: "Couldnt find user" });
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Invalid password" });
         }
 
         const userWithoutPassword = user.toJSON();
