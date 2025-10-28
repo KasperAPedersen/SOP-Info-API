@@ -7,7 +7,7 @@ let Message = sequelize.define('message', {
         autoIncrement: true,
         primaryKey: true
     },
-    sender: {
+    sender_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
