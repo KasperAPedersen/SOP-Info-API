@@ -8,6 +8,10 @@ router.use(Express.json());
 
 router.get('/init', async (req, res) => {
     try {
+        const users = await models.User.findAll();
+
+        if(users.length > 0) return res.json({ success: true });
+
         await models.User.bulkCreate([
             { username: 'user1', password: await bcrypt.hash('pass1', 10), firstName: 'Johnny', lastName: 'Doe', consent: true },
             { username: 'user2', password: await bcrypt.hash('pass2', 10), firstName: 'Jane', lastName: 'Smith', consent: false }
