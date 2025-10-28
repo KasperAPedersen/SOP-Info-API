@@ -8,19 +8,22 @@ let Message = sequelize.define('message', {
         primaryKey: true
     },
     sender: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+            model: 'user',
+            key: 'id'
+        }
     },
-    subject: {
+    title: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    body: {
+    message: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    },
-    {
+}, {
          tableName: 'message',
          timestamps: true
 });
