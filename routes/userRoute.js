@@ -1,94 +1,129 @@
 import Express, { Router } from 'express';
+import models from '../orm/models.js';
+
 const router = Router();
 
-class User {
-    constructor(id, fname, lname, uname, pword, consent) {
-        this.id = id;
-        this.firstName = fname;
-        this.lastName = lname;
-        this.username = uname;
-        this.password = pword;
-        this.consent = consent;
-    }
-}
+router.use(Express.json());
 
-const users = [
-    new User(1, "Johnny", "Doe", "user1", "pass1", false),
-    new User(2, "Jane", "Smith", "user2", "pass2", false)
-];
+router.post('/authenticate', async (req, res) => {
+    try {
+        const { username, password } = req.body;
 
-router.post('/authenticate', Express.json(), (req, res) => {
-    const { username, password } = req.body;
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-        const { password, ...userWithoutPassword } = user;
+        const user = await models.User.findOne({ where: { username, password } });
+        if (!user) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        const userWithoutPassword = user.toJSON();
+        delete userWithoutPassword.password;
+
         res.json(userWithoutPassword);
-    } else {
-        res.status(401).json({ error: "Invalid credentials" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
-router.get('/:id/get', (req, res) => {
-    const id = parseInt(req.params.id);
-    const user = users.find(u => u.id === id);
-    if (user) {
-        const { password, ...userWithoutPassword } = user;
+router.get('/:id/get', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const user = await models.User.findByPk(id);
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const userWithoutPassword = user.toJSON();
+        delete userWithoutPassword.password;
+
         res.json(userWithoutPassword);
-    } else {
-        res.status(404).json({ error: "User not found" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
-router.get('/:id/get/username', (req, res) => {
-    const id = parseInt(req.params.id);
-    const user = users.find(u => u.id === id);
-    if (user) {
+router.get('/:id/get/username', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const user = await models.User.findByPk(id, { attributes: ['username'] });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
         res.type('text/plain').send(user.username);
-    } else {
-        res.status(404).json({ error: "User not found" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
-router.get('/:id/get/name', (req, res) => {
-   const id = parseInt(req.params.id);
-   const user = users.find(u => u.id === id);
-   if (user) {
-       res.type('text/plain').send(user.firstName + " " + user.lastName);
-   } else {
-       res.status(404).json({ error: "User not found" });
-   }
+router.get('/:id/get/name', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const user = await models.User.findByPk(id, { attributes: ['firstName', 'lastName'] });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.type('text/plain').send(`${user.firstName} ${user.lastName}`);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
-router.get('/:id/get/consent', (req, res) => {
-    const id = parseInt(req.params.id);
-    const user = users.find(u => u.id === id);
-    if (user) {
+router.get('/:id/get/consent', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const user = await models.User.findByPk(id, { attributes: ['consent'] });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
         res.json({ consent: user.consent });
-    } else {
-        res.status(404).json({ error: "User not found" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
-router.post('/:id/set/consent', (req, res) => {
-    const id = parseInt(req.params.id);
-    const user = users.find(u => u.id === id);
-    if (user) {
-        user.consent = req.body.consent;
-        // return true if consent is set successfully
-        res.json({ success: true });
-    } else {
-        res.status(404).json({ error: "User not found" });
+router.post('/:id/set/consent', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { consent } = req.body;
+
+        const [updated] = await models.User.update({ consent }, { where: { id } });
+
+        if (updated) {
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: "User not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
-router.post('/:id/set/password', (req, res) => {
-    const id = parseInt(req.params.id);
-    const user = users.find(u => u.id === id);
-    if(user) {
-        user.password = req.body.password;
-        res.json({ success: true });
-    } else {
-        res.status(404).json({ error: "User not found" });
+router.post('/:id/set/password', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { password } = req.body;
+
+        const [updated] = await models.User.update({ password }, { where: { id } });
+
+        if (updated) {
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: "User not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
     }
 });
 
