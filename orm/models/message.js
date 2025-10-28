@@ -8,8 +8,8 @@ let Message = sequelize.define('message', {
         primaryKey: true
     },
     sender: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     subject: {
         type: DataTypes.STRING,
