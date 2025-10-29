@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import models from '../orm/models.js';
+import message from "../orm/models/message.js";
 
 
 const router = Router();
@@ -51,6 +52,11 @@ router.get('/:id/get', async (req, res) => {
     msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
     delete msg.dataValues.createdAt;
     delete msg.dataValues.updatedAt;
+
+    let author = await models.User.findByPk(msg.dataValues.sender_id);
+    msg.dataValues.author = author.dataValues.username;
+
+    delete msg.dataValues.sender_id;
 
     res.json(msg);
 });
