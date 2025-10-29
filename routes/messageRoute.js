@@ -47,6 +47,11 @@ router.get('/:id/get', async (req, res) => {
     if (!msg) {
         return res.status(404).json({ error: "Message not found" });
     }
+
+    msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
+    delete msg.dataValues.createdAt;
+    delete msg.dataValues.updatedAt;
+
     res.json(msg);
 });
 
