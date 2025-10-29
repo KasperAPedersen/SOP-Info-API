@@ -69,6 +69,8 @@ router.get('/get/latest', async (req, res) => {
 
             let author = await models.User.findByPk(msg.dataValues.sender_id);
             msg.dataValues.author = author.dataValues.username;
+
+            delete msg.dataValues.sender_id;
         }
 
         res.json(messages);
