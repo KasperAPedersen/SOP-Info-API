@@ -26,7 +26,8 @@ router.post('/:id/new', async (req, res) => {
         await models.Absence.create({
             userId: id,
             type: type,
-            message: message
+            message: message,
+            status: 'afventer'
         });
         res.status(201).json({ success: true });
     } catch (error) {
