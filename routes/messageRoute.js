@@ -55,6 +55,19 @@ router.get('/:id/get', async (req, res) => {
     res.json(msg);
 });
 
+router.get('/latest', async (req, res) => {
+    try {
+        const messages = await models.Message.findAll({
+            order: [['createdAt', 'DESC']],
+            limit: 5,
+        });
+        res.json(messages);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 export default router;
 
 
