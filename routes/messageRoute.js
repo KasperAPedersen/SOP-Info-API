@@ -55,12 +55,22 @@ router.get('/:id/get', async (req, res) => {
     res.json(msg);
 });
 
-router.get('/latest', async (req, res) => {
+router.get('/get/latest', async (req, res) => {
     try {
         const messages = await models.Message.findAll({
             order: [['createdAt', 'DESC']],
             limit: 5,
         });
+
+        for (const msg of messages) {
+            msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
+            delete msg.dataValues.createdAt;
+            delete msg.dataValues.updatedAt;
+
+            let author = await models.User.findByPk(msg.dataValues.sender_id);
+            msg.dataValues.author = author.dataValues.username;
+        }
+
         res.json(messages);
     } catch (error) {
         console.error(error);
