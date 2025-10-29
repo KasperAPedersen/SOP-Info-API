@@ -30,7 +30,7 @@ router.post('/:id/new', async (req, res) => {
         });
         res.status(201).json({ success: true });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ success: false });
     }
 });
 
