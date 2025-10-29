@@ -33,11 +33,16 @@ router.get('/get', async (req, res) => {
         return res.status(404).json({ error: "Messages not found" });
     }
 
-    messages.forEach(msg => {
+    for (const msg of messages) {
         msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
         delete msg.dataValues.createdAt;
         delete msg.dataValues.updatedAt;
-    });
+
+        let author = await models.User.findByPk(msg.dataValues.sender_id);
+        msg.dataValues.author = author.dataValues.username;
+
+        delete msg.dataValues.sender_id;
+    }
 
     res.json(messages);
 });
