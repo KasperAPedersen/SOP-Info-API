@@ -28,6 +28,16 @@ router.get('/init', async (req, res) => {
 
 router.get('/get', async (req, res) => {
     const messages = await models.Message.findAll();
+    if (!messages) {
+        return res.status(404).json({ error: "Messages not found" });
+    }
+
+    messages.forEach(msg => {
+        msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
+        delete msg.dataValues.createdAt;
+        delete msg.dataValues.updatedAt;
+    });
+
     res.json(messages);
 });
 
