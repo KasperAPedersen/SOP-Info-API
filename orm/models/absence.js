@@ -1,14 +1,6 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../database.js';
 
-/*data class Absence(
-    val id: Int,
-    val userId: Int,
-    val status: AbsenceStatus,
-    val message: String,
-    val type: AbsenceType
-)
-*/
 let Absence = sequelize.define('absence', {
     id: {
         type: DataTypes.INTEGER,
@@ -24,7 +16,8 @@ let Absence = sequelize.define('absence', {
         }
     },
     status: {
-        type: DataTypes.ENUM('afventer', 'godkendt', 'afvist')
+        type: DataTypes.ENUM('afventer', 'godkendt', 'afvist'),
+        default: 'afventer'
     },
     message: {
         type: DataTypes.STRING,
