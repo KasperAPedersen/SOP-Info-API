@@ -14,12 +14,23 @@ router.post('/new', async (req, res) => {
             message: message
         });
 
+        const date = new Date(newMessage.dataValues.createdAt);
+
+        const formattedDate = new Intl.DateTimeFormat('da-DK', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).format(date);
+
         broadcast('message', {
             id: newMessage.id,
             author: (await models.User.findByPk(newMessage.dataValues.sender_id)).dataValues.username,
             title: newMessage.title,
             message: newMessage.message,
-            timestamp: newMessage.dataValues.createdAt.toLocaleString()
+            timestamp: formattedDate
         });
 
         res.status(201).json({ success: true });
@@ -57,7 +68,16 @@ router.get('/get', async (req, res) => {
     }
 
     for (const msg of messages) {
-        msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
+        const formattedDate = new Intl.DateTimeFormat('da-DK', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).format(msg.dataValues.createdAt);
+
+        msg.dataValues.timestamp = formattedDate;
         delete msg.dataValues.createdAt;
         delete msg.dataValues.updatedAt;
 
