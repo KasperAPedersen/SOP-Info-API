@@ -1,5 +1,6 @@
 import Express, { Router } from 'express';
 import models from '../orm/models.js';
+import { broadcast } from '../socket.js';
 
 const router = Router();
 
@@ -23,12 +24,21 @@ router.post('/:id/new', async (req, res) => {
     try {
         await models.Absence.destroy({ where: { userId: id } });
 
-        await models.Absence.create({
+        const newAbsence = await models.Absence.create({
             userId: id,
             type: type,
             message: message,
             status: 'afventer'
         });
+
+        broadcast('absence', {
+            id: newAbsence.id,
+            userId: id,
+            status: newAbsence.status,
+            message: newAbsence.message,
+            type: newAbsence.type
+        });
+
         res.status(201).json({ success: true });
     } catch (error) {
         res.status(400).json({ success: false });
