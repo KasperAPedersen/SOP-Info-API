@@ -22,6 +22,8 @@ router.post('/new', async (req, res) => {
             timestamp: newMessage.dataValues.createdAt.toLocaleString()
         });
 
+        broadcast('qawds', "Hej")
+
         res.status(201).json({ success: true });
     } catch (error) {
         res.status(400).json({ success: false });
