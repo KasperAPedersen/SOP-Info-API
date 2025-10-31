@@ -6,6 +6,23 @@ const router = Router();
 
 router.use(Express.json());
 
+router.post('/:id/set/status', async (req, res) => {
+    const id = parseInt(req.params.id);
+    const { status } = req.body;
+    try {
+        // limit 1
+        const absence = await models.Absence.findOne({ where: { userId: id } });
+        if (!absence) {
+            return res.status(404).json({ error: "Absence not found" });
+        }
+
+        absence.status = status;
+        await absence.save();
+    } catch(error) {
+        res.status(400).json({ success: false });
+    }
+});
+
 router.get('/:id/get', async (req, res) => {
     const id = parseInt(req.params.id);
     const absence = await models.Absence.findOne({
