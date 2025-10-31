@@ -13,7 +13,7 @@ router.post('/new', async (req, res) => {
             title: title,
             message: message
         });
-        broadcast({ type: 'message', message: message });
+        broadcast('message', message);
         res.status(201).json({ success: true });
     } catch (error) {
         res.status(400).json({ success: false });
@@ -36,6 +36,7 @@ router.get('/init', async (req, res) => {
         ]);
 
         broadcast({ type: 'message', message: 'Messages Initialized' });
+        broadcast({ type: 'test', message: 'Test Initialized' });
 
         res.json({ success: true });
     } catch (error) {
