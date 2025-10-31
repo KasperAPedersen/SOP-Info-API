@@ -5,6 +5,21 @@ import { broadcast } from '../socket.js';
 
 const router = Router();
 
+router.post('/new', async (req, res) => {
+    const { sender_id, title, message } = req.body;
+    try {
+        await models.Message.create({
+            sender_id: sender_id,
+            title: title,
+            message: message
+        });
+        broadcast({ type: 'message', message: message });
+        res.status(201).json({ success: true });
+    } catch (error) {
+        res.status(400).json({ success: false });
+    }
+})
+
 router.get('/init', async (req, res) => {
     try {
         const message = await models.Message.findAll();
