@@ -18,6 +18,16 @@ router.post('/:id/set/status', async (req, res) => {
 
         absence.status = status;
         await absence.save();
+
+        broadcast('absence', {
+            id: absence.id,
+            userId: id,
+            status: absence.status,
+            message: absence.message,
+            type: absence.type
+        });
+
+        res.status(200).json({ success: true });
     } catch(error) {
         res.status(400).json({ success: false });
     }
