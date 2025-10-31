@@ -16,10 +16,10 @@ router.post('/new', async (req, res) => {
 
         broadcast('message', {
             id: newMessage.id,
-            author: sender_id,       // or newMessage.sender.name if you have associations
+            author: (await models.User.findByPk(newMessage.dataValues.sender_id)).dataValues.username,
             title: newMessage.title,
             message: newMessage.message,
-            timestamp: newMessage.createdAt // or newMessage.updatedAt
+            timestamp: newMessage.dataValues.createdAt.toLocaleString()
         });
 
         res.status(201).json({ success: true });
