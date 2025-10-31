@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import models from '../orm/models.js';
-import message from "../orm/models/message.js";
+import { broadcast } from '../socket.js';
 
 
 const router = Router();
@@ -19,6 +19,8 @@ router.get('/init', async (req, res) => {
             { sender_id: 1, title: "Hello", message: "Hello World" },
             { sender_id: 1, title: "Hello", message: "Hello World" },
         ]);
+
+        broadcast({ type: 'message', message: 'Messages Initialized' });
 
         res.json({ success: true });
     } catch (error) {
