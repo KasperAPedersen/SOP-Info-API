@@ -10,19 +10,21 @@ let sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.
 });
 
 (async () => {
+    console.log('\n[INIT]\t\tInitializing...');
     try {
-        await sequelize.authenticate(); // Test connectivity
-        console.log('[CON]\t\tConnection has been established successfully.\n');
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
     } catch (e) {
-        console.error('[CON]\t\tUnable to connect to the database:', e);
+        console.error('Unable to connect to the database:', e);
     }
 
     try {
         await sequelize.sync();
-        console.log('[SYN]\t\tmodels has been synchronized.\n')
+        console.log('models has been synchronized.')
     } catch (e) {
-        console.error('[SYN]\t\tUnable to synchronize models:', e);
+        console.error('Unable to synchronize models:', e);
     }
+    console.log('\n[LOG]\t\tReceived requests');
 })();
 
 export default sequelize;
