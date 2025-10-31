@@ -8,17 +8,25 @@ const router = Router();
 router.post('/new', async (req, res) => {
     const { sender_id, title, message } = req.body;
     try {
-        await models.Message.create({
+        const newMessage = await models.Message.create({
             sender_id: sender_id,
             title: title,
             message: message
         });
-        broadcast('message', message);
+
+        broadcast('message', {
+            id: newMessage.id,
+            author: sender_id,       // or newMessage.sender.name if you have associations
+            title: newMessage.title,
+            message: newMessage.message,
+            timestamp: newMessage.createdAt // or newMessage.updatedAt
+        });
+
         res.status(201).json({ success: true });
     } catch (error) {
         res.status(400).json({ success: false });
     }
-})
+});
 
 router.get('/init', async (req, res) => {
     try {
@@ -34,9 +42,6 @@ router.get('/init', async (req, res) => {
             { sender_id: 1, title: "Hello", message: "Hello World" },
             { sender_id: 1, title: "Hello", message: "Hello World" },
         ]);
-
-        broadcast({ type: 'message', message: 'Messages Initialized' });
-        broadcast({ type: 'test', message: 'Test Initialized' });
 
         res.json({ success: true });
     } catch (error) {
