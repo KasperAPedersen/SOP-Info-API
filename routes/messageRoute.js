@@ -22,8 +22,6 @@ router.post('/new', async (req, res) => {
             timestamp: newMessage.dataValues.createdAt.toLocaleString()
         });
 
-        broadcast('qawds', "Hej")
-
         res.status(201).json({ success: true });
     } catch (error) {
         res.status(400).json({ success: false });
@@ -70,50 +68,6 @@ router.get('/get', async (req, res) => {
     }
 
     res.json(messages);
-});
-
-router.get('/:id/get', async (req, res) => {
-    const id = parseInt(req.params.id);
-    const msg = await models.Message.findByPk(id);
-    if (!msg) {
-        return res.status(404).json({ error: "Message not found" });
-    }
-
-    msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
-    delete msg.dataValues.createdAt;
-    delete msg.dataValues.updatedAt;
-
-    let author = await models.User.findByPk(msg.dataValues.sender_id);
-    msg.dataValues.author = author.dataValues.username;
-
-    delete msg.dataValues.sender_id;
-
-    res.json(msg);
-});
-
-router.get('/get/latest', async (req, res) => {
-    try {
-        const messages = await models.Message.findAll({
-            order: [['createdAt', 'DESC']],
-            limit: 5,
-        });
-
-        for (const msg of messages) {
-            msg.dataValues.timestamp = msg.dataValues.createdAt.toLocaleString();
-            delete msg.dataValues.createdAt;
-            delete msg.dataValues.updatedAt;
-
-            let author = await models.User.findByPk(msg.dataValues.sender_id);
-            msg.dataValues.author = author.dataValues.username;
-
-            delete msg.dataValues.sender_id;
-        }
-
-        res.json(messages);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Server error" });
-    }
 });
 
 export default router;
