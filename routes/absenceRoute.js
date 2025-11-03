@@ -45,9 +45,8 @@ router.get('/:id/get', async (req, res) => {
     res.json(absence);
 });
 
-router.post('/:id/new', async (req, res) => {
-    const id = parseInt(req.params.id);
-    const { message,type } = req.body;
+router.post('/new', async (req, res) => {
+    const { id, message,type } = req.body;
     try {
         await models.Absence.destroy({ where: { userId: id } });
 
