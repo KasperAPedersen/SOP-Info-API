@@ -20,5 +20,5 @@ const server = http.createServer(app);
 initWebSocket(server);
 
 server.listen(3000, '0.0.0.0', () => {
-    console.log('Server is running on port 3000 on all interfaces');
+    console.log('Server is running on port 3000');
 });

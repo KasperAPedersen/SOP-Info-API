@@ -20,7 +20,7 @@ let sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.
 
     try {
         await sequelize.sync();
-        console.log('models has been synchronized.')
+        console.log('Models has been synchronized.')
     } catch (e) {
         console.error('Unable to synchronize models:', e);
     }
