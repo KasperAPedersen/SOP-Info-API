@@ -10,7 +10,6 @@ let sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.
 });
 
 (async () => {
-    console.log('\n[INIT]\t\tInitializing...');
     try {
         await sequelize.authenticate();
         console.log('DB connection has been established successfully.');

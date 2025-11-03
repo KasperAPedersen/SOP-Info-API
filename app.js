@@ -16,6 +16,7 @@ app.use('/user', UserRoute);
 app.use('/message', MessageRoute);
 app.use('/absence', AbsenceRoute);
 
+console.log('\n[INIT]\t\tInitializing');
 const server = http.createServer(app);
 initWebSocket(server);
 
