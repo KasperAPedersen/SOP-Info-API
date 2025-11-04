@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import models from '../orm/models.js';
 import { broadcast } from '../socket.js';
+import { requireAuth } from '../middleware/auth.js';
 
 
 const router = Router();
 
-router.post('/new', async (req, res) => {
+router.post('/new', requireAuth, async (req, res) => {
     const { sender_id, title, message } = req.body;
     try {
         const newMessage = await models.Message.create({
@@ -50,7 +51,7 @@ router.get('/init', async (req, res) => {
     }
 });
 
-router.get('/get', async (req, res) => {
+router.get('/get', requireAuth, async (req, res) => {
     const messages = await models.Message.findAll();
     if (!messages) {
         return res.status(404).json({ error: "Messages not found" });
