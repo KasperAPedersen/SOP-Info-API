@@ -7,7 +7,7 @@ const router = Router();
 
 router.use(Express.json());
 
-router.post('/set/status', requireAuth, async (req, res) => {
+router.post('/:id/set/status', async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const { status } = req.body;
