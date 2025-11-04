@@ -63,9 +63,9 @@ router.post('/authenticate', async (req, res) => {
     }
 });
 
-router.get('/:id/get', requireAuth, async (req, res) => {
+router.get('/get', requireAuth, async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const { id } = req.user;
         const user = await models.User.findByPk(id);
 
         if (!user) {
@@ -82,9 +82,9 @@ router.get('/:id/get', requireAuth, async (req, res) => {
     }
 });
 
-router.get('/:id/get/username', requireAuth, async (req, res) => {
+router.get('/get/username', requireAuth, async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const { id } = req.user;
         const user = await models.User.findByPk(id, { attributes: ['username'] });
 
         if (!user) {
@@ -98,9 +98,9 @@ router.get('/:id/get/username', requireAuth, async (req, res) => {
     }
 });
 
-router.get('/:id/get/name', requireAuth, async (req, res) => {
+router.get('/get/name', requireAuth, async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const { id } = req.user;
         const user = await models.User.findByPk(id, { attributes: ['firstName', 'lastName'] });
 
         if (!user) {
@@ -114,9 +114,9 @@ router.get('/:id/get/name', requireAuth, async (req, res) => {
     }
 });
 
-router.get('/:id/get/consent', requireAuth, async (req, res) => {
+router.get('/get/consent', requireAuth, async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const { id } = req.user;
         const user = await models.User.findByPk(id, { attributes: ['consent'] });
 
         if (!user) {
@@ -130,9 +130,9 @@ router.get('/:id/get/consent', requireAuth, async (req, res) => {
     }
 });
 
-router.post('/:id/set/consent', requireAuth, async (req, res) => {
+router.post('/set/consent', requireAuth, async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const { id } = req.user;
         const { consent } = req.body;
 
         const [updated] = await models.User.update({ consent }, { where: { id } });
@@ -148,9 +148,9 @@ router.post('/:id/set/consent', requireAuth, async (req, res) => {
     }
 });
 
-router.post('/:id/set/password', requireAuth, async (req, res) => {
+router.post('/set/password', requireAuth, async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const { id } = req.user;
         const { password } = req.body;
 
         const [updated] = await models.User.update({ password }, { where: { id } });
