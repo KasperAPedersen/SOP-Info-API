@@ -1,6 +1,9 @@
 import Express from 'express';
 import http from 'http';
 import morgan from 'morgan';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 import { initWebSocket } from './socket.js';
 import UserRoute from './routes/userRoute.js';

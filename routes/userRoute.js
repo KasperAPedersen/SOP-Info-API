@@ -1,6 +1,12 @@
 import Express, { Router } from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+
 import models from '../orm/models.js';
+import { requireAuth} from "../middleware/auth.js";
+
+dotenv.config();
 
 const router = Router();
 
@@ -38,17 +44,26 @@ router.post('/authenticate', async (req, res) => {
             return res.status(401).json({ error: "Invalid password" });
         }
 
+        const payload = { id: user.id };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRATION
+        });
+
         const userWithoutPassword = user.toJSON();
         delete userWithoutPassword.password;
 
-        res.json(userWithoutPassword);
+        res.json({
+            token,
+            user: userWithoutPassword
+        });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Server error" });
     }
 });
 
-router.get('/:id/get', async (req, res) => {
+router.get('/:id/get', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const user = await models.User.findByPk(id);
@@ -67,7 +82,7 @@ router.get('/:id/get', async (req, res) => {
     }
 });
 
-router.get('/:id/get/username', async (req, res) => {
+router.get('/:id/get/username', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const user = await models.User.findByPk(id, { attributes: ['username'] });
@@ -83,7 +98,7 @@ router.get('/:id/get/username', async (req, res) => {
     }
 });
 
-router.get('/:id/get/name', async (req, res) => {
+router.get('/:id/get/name', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const user = await models.User.findByPk(id, { attributes: ['firstName', 'lastName'] });
@@ -99,7 +114,7 @@ router.get('/:id/get/name', async (req, res) => {
     }
 });
 
-router.get('/:id/get/consent', async (req, res) => {
+router.get('/:id/get/consent', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const user = await models.User.findByPk(id, { attributes: ['consent'] });
@@ -115,7 +130,7 @@ router.get('/:id/get/consent', async (req, res) => {
     }
 });
 
-router.post('/:id/set/consent', async (req, res) => {
+router.post('/:id/set/consent', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const { consent } = req.body;
@@ -133,7 +148,7 @@ router.post('/:id/set/consent', async (req, res) => {
     }
 });
 
-router.post('/:id/set/password', async (req, res) => {
+router.post('/:id/set/password', requireAuth, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const { password } = req.body;
