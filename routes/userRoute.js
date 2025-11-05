@@ -134,19 +134,14 @@ router.post('/set/consent', requireAuth, async (req, res) => {
     try {
         const { id } = req.user;
         const { consent } = req.body;
+        console.log(req);
 
-        if(id == null) return res.status(401).json(
-            { error: "Id is null" }
-        )
+        const [updated] = await models.User.update({ consent }, { where: { id } });
 
-        const result = await models.User.update({ consent }, { where: { id } });
-        console.log(result);
-
-
-        if (result.updated) {
+        if (updated) {
             res.json({ success: true });
         } else {
-            res.status(404).json({ error: "Something went wrong", updated: result.updated });
+            res.status(404).json({ error: "User not found" });
         }
     } catch (error) {
         console.error(error);
