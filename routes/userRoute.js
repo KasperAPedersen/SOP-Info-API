@@ -154,7 +154,8 @@ router.post('/set/password', requireAuth, async (req, res) => {
         const { id } = req.user;
         const { password } = req.body;
 
-        const [updated] = await models.User.update({ password }, { where: { id } });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const [updated] = await models.User.update({ password: hashedPassword }, { where: { id } });
 
         if (updated) {
             res.json({ success: true });
