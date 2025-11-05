@@ -144,7 +144,7 @@ router.post('/set/consent', requireAuth, async (req, res) => {
         if (updated) {
             res.json({ success: true });
         } else {
-            res.status(404).json({ error: "User not found" updated: updated });
+            res.status(404).json({ error: "User not found", updated: updated });
         }
     } catch (error) {
         console.error(error);
