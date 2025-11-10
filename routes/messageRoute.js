@@ -6,7 +6,7 @@ import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
-router.post('/new', requireAuth, async (req, res) => {
+router.post('/new', async (req, res) => {
     const { sender_id, title, message } = req.body;
     try {
         const newMessage = await models.Message.create({
