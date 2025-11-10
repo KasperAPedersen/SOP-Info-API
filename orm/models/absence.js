@@ -23,7 +23,7 @@ let Absence = sequelize.define('absence', {
         type: DataTypes.STRING,
     },
     type: {
-        type: DataTypes.ENUM('syg', 'ferie', 'andet')
+        type: DataTypes.ENUM('syg', 'andet')
     }
 }, {
     tableName: 'absence',
