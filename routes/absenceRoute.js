@@ -1,11 +1,36 @@
 import Express, { Router } from 'express';
 import models from '../orm/models.js';
 import { broadcast } from '../socket.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAdmin, requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
 router.use(Express.json());
+
+router.get('/all', requireAdmin, async (req, res) => {
+    try {
+        const absences = await models.Absence.findAll({
+            include: [{
+                model: models.User,
+                attributes: ['username']
+            }],
+            order: [['createdAt', 'DESC']]
+        });
+
+        const formattedAbsences = absences.map(absence => ({
+            id: absence.id,
+            user: absence.User.username,
+            date: new Date(absence.createdAt).toLocaleDateString('da-DK'),
+            reason: absence.message,
+            type: absence.type,
+            status: absence.status
+        }));
+
+        res.json(formattedAbsences);
+    } catch (error) {
+        res.status(500).json({ error: "Could not fetch absences" });
+    }
+});
 
 router.post('/:id/set/status', async (req, res) => {
     try {

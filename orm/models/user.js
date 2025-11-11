@@ -39,4 +39,10 @@ let User = sequelize.define('user', {
     timestamps: false
 });
 
+User.associate = (models) => {
+    User.hasMany(models.Absence, {
+        foreignKey: 'userId'
+    });
+};
+
 export default User;

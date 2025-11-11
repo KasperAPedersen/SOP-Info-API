@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import models from '../orm/models.js';
 import { broadcast } from '../socket.js';
-import { requireAuth } from '../middleware/auth.js';
+import {requireAdmin, requireAuth} from '../middleware/auth.js';
 
 
 const router = Router();
 
-router.post('/new', async (req, res) => {
+router.post('/new', requireAdmin, async (req, res) => {
     const { sender_id, title, message } = req.body;
     try {
         const newMessage = await models.Message.create({

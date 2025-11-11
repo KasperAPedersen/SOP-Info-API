@@ -17,7 +17,7 @@ let Absence = sequelize.define('absence', {
     },
     status: {
         type: DataTypes.ENUM('afventer', 'godkendt', 'afvist'),
-        default: 'afventer'
+        defaultValue: 'afventer'
     },
     message: {
         type: DataTypes.STRING,
@@ -29,5 +29,11 @@ let Absence = sequelize.define('absence', {
     tableName: 'absence',
     timestamps: true
 });
+
+Absence.associate = (models) => {
+    Absence.belongsTo(models.User, {
+        foreignKey: 'userId'
+    });
+};
 
 export default Absence;
