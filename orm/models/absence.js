@@ -32,7 +32,8 @@ let Absence = sequelize.define('absence', {
 
 Absence.associate = (models) => {
     Absence.belongsTo(models.User, {
-        foreignKey: 'userId'
+        foreignKey: 'userId',
+        as: 'user'
     });
 };
 

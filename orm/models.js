@@ -1,11 +1,19 @@
-import sequelize from './database.js';
-import User from './models/user.js';
-import Message from './models/message.js';
-import Absence from './models/absence.js';
+import User from './models/User.js';
+import Message from './models/Message.js';
+import Absence from './models/Absence.js';
 
-export default {
-    sequelize,
+const models = {
     User,
     Message,
     Absence
 };
+
+// Initialize associations
+Object.keys(models).forEach(modelName => {
+    if (models[modelName].associate) {
+        models[modelName].associate(models);
+    }
+});
+
+export { User, Message, Absence };
+export default models;

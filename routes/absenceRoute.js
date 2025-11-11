@@ -12,6 +12,7 @@ router.get('/all', requireAdmin, async (req, res) => {
         const absences = await models.Absence.findAll({
             include: [{
                 model: models.User,
+                as: 'user',
                 attributes: ['username']
             }],
             order: [['createdAt', 'DESC']]
@@ -19,25 +20,26 @@ router.get('/all', requireAdmin, async (req, res) => {
 
         const formattedAbsences = absences.map(absence => ({
             id: absence.id,
-            user: absence.User.username,
+            user: absence.user?.username || 'Ukendt',
             date: new Date(absence.createdAt).toLocaleDateString('da-DK'),
-            reason: absence.message,
+            reason: absence.message || 'Ingen besked',
             type: absence.type,
             status: absence.status
         }));
 
         res.json(formattedAbsences);
     } catch (error) {
+        console.error('Absence fetch error:', error);
         res.status(500).json({ error: "Could not fetch absences" });
     }
 });
 
-router.post('/:id/set/status', async (req, res) => {
+router.post('/:id/set/status', requireAdmin, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const { status } = req.body;
 
-        const absence = await models.Absence.findOne({ where: { userId: id } });
+        const absence = await models.Absence.findByPk(id);
         if (!absence) {
             return res.status(404).json({ error: "Absence not found" });
         }
@@ -47,7 +49,7 @@ router.post('/:id/set/status', async (req, res) => {
 
         broadcast('absence', {
             id: absence.id,
-            userId: id,
+            userId: absence.userId,
             status: absence.status,
             message: absence.message,
             type: absence.type
