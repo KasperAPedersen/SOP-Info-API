@@ -1,6 +1,6 @@
-import User from './models/User.js';
-import Message from './models/Message.js';
-import Absence from './models/Absence.js';
+import User from './models/user.js';
+import Message from './models/message.js';
+import Absence from './models/absence.js';
 
 const models = {
     User,
