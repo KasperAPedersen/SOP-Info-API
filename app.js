@@ -2,6 +2,7 @@ import Express from 'express';
 import http from 'http';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -13,6 +14,11 @@ import AdminRoute from './routes/adminRoute.js';
 
 const app = Express();
 
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(Express.json());
 app.use(morgan("dev"));
 
@@ -20,7 +26,6 @@ app.use('/user', UserRoute);
 app.use('/message', MessageRoute);
 app.use('/absence', AbsenceRoute);
 app.use('/admin', AdminRoute);
-
 
 console.log('\n[INIT]\t\tInitializing');
 const server = http.createServer(app);
