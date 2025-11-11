@@ -91,7 +91,8 @@ router.post('/new', requireAuth, async (req, res) => {
             userId: id,
             status: newAbsence.status,
             message: newAbsence.message,
-            type: newAbsence.type
+            type: newAbsence.type,
+            username: (await models.User.findByPk(id)).dataValues.username
         });
 
         res.status(201).json({ success: true });
