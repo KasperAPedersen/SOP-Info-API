@@ -7,7 +7,7 @@ const router = Router();
 
 router.use(Express.json());
 
-router.get('/all', requireAdmin, async (req, res) => {
+router.get('/get/all', requireAdmin, async (req, res) => {
     try {
         const absences = await models.Absence.findAll({
             include: [{
