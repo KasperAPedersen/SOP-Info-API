@@ -21,6 +21,7 @@ router.get('/all', requireAdmin, async (req, res) => {
         const formattedAbsences = absences.map(absence => ({
             id: absence.id,
             user: absence.user?.username || 'Ukendt',
+            userId: absence.userId,
             date: new Date(absence.createdAt).toLocaleDateString('da-DK'),
             reason: absence.message || 'Ingen besked',
             type: absence.type,
