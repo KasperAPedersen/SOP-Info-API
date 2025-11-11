@@ -54,7 +54,7 @@ router.post('/:id/set/status', requireAdmin, async (req, res) => {
             status: absence.status,
             message: absence.message,
             type: absence.type,
-            username: absence.user?.username || 'Ukendt'
+            username: (await models.User.findByPk(absence.userId)).dataValues.username
         });
 
         res.status(200).json({ success: true });
