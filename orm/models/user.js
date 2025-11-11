@@ -27,6 +27,10 @@ let User = sequelize.define('user', {
     consent: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 }, {
     tableName: 'user',
