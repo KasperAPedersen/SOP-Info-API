@@ -53,7 +53,8 @@ router.post('/:id/set/status', requireAdmin, async (req, res) => {
             userId: absence.userId,
             status: absence.status,
             message: absence.message,
-            type: absence.type
+            type: absence.type,
+            username: absence.user?.username || 'Ukendt'
         });
 
         res.status(200).json({ success: true });
