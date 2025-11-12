@@ -50,4 +50,27 @@ router.post('/new', async (req, res) => {
     }
 });
 
+router.get('/get', async (req, res) => {
+    try {
+        const attendences = await models.Attendence.findAll({
+            include: [{
+                model: models.User,
+                as: 'user',
+                attributes: ['username']
+            }]
+        });
+
+        const formattedAttendences = attendences.map(attendence => ({
+            id: attendence.id,
+            user: attendence.user?.username || 'Ukendt',
+            status: attendence.status
+        }));
+
+        res.status(200).json(formattedAttendences);
+    } catch(e) {
+        console.error(e);
+        res.status(500).json({ error: "Server error" });
+    }
+})
+
 export default router;
