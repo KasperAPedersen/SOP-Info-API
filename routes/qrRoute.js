@@ -38,7 +38,7 @@ router.get('/generate', async (req, res) => {
 
         // Generer QR-kode som Data URL
         const qrCodeDataURL = await QRCode.toDataURL(randomText);
-
+    console.log(randomText);
         res.json({
             success: true,
             qrCode: qrCodeDataURL,
