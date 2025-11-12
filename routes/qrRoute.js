@@ -29,7 +29,7 @@ router.get('/init', async (req, res) => {
     }
 });
 
-router.get('/get/qr', async (req, res) => {
+router.get('/get', async (req, res) => {
     try {
         if(!qrCodeDataURL || !checkInSecret) {
             await generateQrCode();
@@ -86,7 +86,7 @@ router.post('/new', async (req, res) => {
     }
 });
 
-router.get('/get', async (req, res) => {
+router.get('/get/all/attendence', async (req, res) => {
     try {
         const attendences = await models.Attendence.findAll({
             include: [{
