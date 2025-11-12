@@ -13,6 +13,7 @@ const router = Router();
 router.use(Express.json());
 
 let checkInSecret = "secret";
+let qrCodeDataURL = "";
 
 router.get('/init', async (req, res) => {
     try {
@@ -28,26 +29,16 @@ router.get('/init', async (req, res) => {
     }
 });
 
-router.get('/generate', async (req, res) => {
-    try {
-        // Generer en tilfældig tekststreng (64 tegn)
-        const randomText = crypto.randomBytes(32).toString('hex');
-
-        // Gem den som "checkInSecret"
-        checkInSecret = randomText;
-
-        // Generer QR-kode som Data URL
-        const qrCodeDataURL = await QRCode.toDataURL(randomText);
-    console.log(randomText);
-        res.json({
-            success: true,
-            qrCode: qrCodeDataURL,
-            content: randomText // valgfrit — fjern denne linje, hvis du ikke vil returnere hemmeligheden i responsen
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Server error" });
+router.get('/get/qr', async (req, res) => {
+    if(!qrCodeDataURL || !checkInSecret) {
+        await generateQrCode();
     }
+
+    res.json({
+        success: true,
+        qrCode: qrCodeDataURL,
+        content: checkInSecret
+    });
 });
 
 router.post('/new', async (req, res) => {
@@ -81,6 +72,8 @@ router.post('/new', async (req, res) => {
             username: (await models.User.findByPk(findAttendence.userId)).dataValues.username
         });
 
+        await generateQrCode();
+
         res.json({ success: true, content: "" });
     } catch (error) {
         console.error(error);
@@ -110,5 +103,10 @@ router.get('/get', async (req, res) => {
         res.status(500).json({ error: "Server error" });
     }
 })
+
+let generateQrCode = async () => {
+    checkInSecret = crypto.randomBytes(32).toString('hex');
+    qrCodeDataURL = await QRCode.toDataURL(checkInSecret);
+};
 
 export default router;
