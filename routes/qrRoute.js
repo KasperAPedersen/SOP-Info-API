@@ -22,7 +22,7 @@ router.get('/init', async (req, res) => {
         console.error(e);
         res.status(500).json({ error: "Server error" });
     }
-})
+});
 
 router.post('/new', async (req, res) => {
     try {
