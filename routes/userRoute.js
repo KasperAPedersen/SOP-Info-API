@@ -30,6 +30,23 @@ router.get('/init', async (req, res) => {
     }
 });
 
+router.post('/new', async (req, res) => {
+    const { username, password, firstName, lastName } = req.body;
+    try {
+        if(username == null || password == null || firstName == null || lastName == null) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await models.User.create({ username, password: hashedPassword, firstName, lastName });
+
+        res.status(201).json({ id: newUser.id });
+    } catch(e) {
+        console.error(e);
+        res.status(400).json({ error: "Couldn't create user" });
+    }
+});
+
 router.post('/authenticate', async (req, res) => {
     try {
         const { username, password } = req.body;
