@@ -1,14 +1,18 @@
 import Express, { Router } from 'express';
 import dotenv from 'dotenv';
+import QRCode from 'qrcode';
+import crypto from 'crypto';
 import models from '../orm/models.js';
+
 import { broadcast } from '../socket.js';
+
 
 dotenv.config();
 
 const router = Router();
 router.use(Express.json());
 
-const checkInSecret = "secret";
+let checkInSecret = "secret";
 
 router.get('/init', async (req, res) => {
     try {
@@ -20,6 +24,28 @@ router.get('/init', async (req, res) => {
         res.json({ success: true });
     } catch(e) {
         console.error(e);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.get('/generate', async (req, res) => {
+    try {
+        // Generer en tilfældig tekststreng (64 tegn)
+        const randomText = crypto.randomBytes(32).toString('hex');
+
+        // Gem den som "checkInSecret"
+        checkInSecret = randomText;
+
+        // Generer QR-kode som Data URL
+        const qrCodeDataURL = await QRCode.toDataURL(randomText);
+
+        res.json({
+            success: true,
+            qrCode: qrCodeDataURL,
+            secret: randomText // valgfrit — fjern denne linje, hvis du ikke vil returnere hemmeligheden i responsen
+        });
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Server error" });
     }
 });
