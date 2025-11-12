@@ -110,8 +110,12 @@ router.get('/get', async (req, res) => {
 })
 
 let generateQrCode = async () => {
-    checkInSecret = crypto.randomBytes(32).toString('hex');
-    qrCodeDataURL = await QRCode.toDataURL(checkInSecret);
+    try {
+        checkInSecret = crypto.randomBytes(32).toString('hex');
+        qrCodeDataURL = await QRCode.toDataURL(checkInSecret);
+    } catch(e) {
+        console.error(e);
+    }
 };
 
 export default router;
