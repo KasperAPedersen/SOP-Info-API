@@ -1,7 +1,7 @@
 import User from './models/user.js';
 import Message from './models/message.js';
 import Absence from './models/absence.js';
-import Attendence from './models/attendence.js.js';
+import Attendence from './models/attendence.js';
 
 const models = {
     User,
