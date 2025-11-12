@@ -40,6 +40,8 @@ router.get('/generate', async (req, res) => {
         const qrCodeDataURL = await QRCode.toDataURL(randomText);
 
         res.json({
+            success: true,
+            qrCode: qrCodeDataURL,
             content: randomText // valgfrit — fjern denne linje, hvis du ikke vil returnere hemmeligheden i responsen
         });
     } catch (error) {
