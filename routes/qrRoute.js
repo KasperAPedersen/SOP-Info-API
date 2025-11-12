@@ -8,7 +8,7 @@ dotenv.config();
 const router = Router();
 router.use(Express.json());
 
-const secret = "secret";
+const checkInSecret = "secret";
 
 router.get('/init', async (req, res) => {
     try {
@@ -26,11 +26,11 @@ router.get('/init', async (req, res) => {
 
 router.post('/new', async (req, res) => {
     try {
-        const { userId, providedSecret } = req.body;
+        const { userId, secret } = req.body;
 
-        console.log(providedSecret);
+        console.log(secret);
 
-        if(providedSecret !== secret) {
+        if(secret !== checkInSecret) {
             return res.status(401).json({ error: "Invalid secret" });
         }
 
