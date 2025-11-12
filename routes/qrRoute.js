@@ -28,7 +28,7 @@ router.post('/new', async (req, res) => {
     try {
         const { userId, secret } = req.body;
 
-        if(secret != secret) {
+        if(secret !== secret) {
             return res.status(401).json({ error: "Invalid secret" });
         }
 
