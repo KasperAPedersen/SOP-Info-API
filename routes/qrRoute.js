@@ -1,6 +1,7 @@
 import Express, { Router } from 'express';
 import dotenv from 'dotenv';
 import models from '../orm/models.js';
+import { broadcast } from '../socket.js';
 
 dotenv.config();
 
@@ -42,6 +43,11 @@ router.post('/new', async (req, res) => {
         await findAttendence.save();
 
         console.log("Attendence updated");
+
+        broadcast('attendence', {
+            userId: findAttendence.userId,
+            status: findAttendence.status,
+        });
 
         res.json({ success: true });
     } catch (error) {
