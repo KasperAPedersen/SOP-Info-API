@@ -1,11 +1,13 @@
 import User from './models/user.js';
 import Message from './models/message.js';
 import Absence from './models/absence.js';
+import Attendence from './models/attendence.js.js';
 
 const models = {
     User,
     Message,
-    Absence
+    Absence,
+    Attendence
 };
 
 // Initialize associations
@@ -15,5 +17,5 @@ Object.keys(models).forEach(modelName => {
     }
 });
 
-export { User, Message, Absence };
+export { User, Message, Absence, Attendence };
 export default models;

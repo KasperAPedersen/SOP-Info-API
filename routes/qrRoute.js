@@ -1,5 +1,6 @@
 import Express, { Router } from 'express';
 import dotenv from 'dotenv';
+import models from '../orm/models.js';
 
 dotenv.config();
 
@@ -7,9 +8,25 @@ const router = Router();
 
 router.use(Express.json());
 
-router.post('/test', async (req, res) => {
+router.post('/new', async (req, res) => {
     try {
-        console.log(req.body)
+        const { userId } = req.body;
+
+        if(userId == null) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        const findAttendence = await models.Attendence.findOne({ where: { userId: userId } });
+        if(!findAttendence) {
+            console.log("No attendence found");
+            await models.Attendence.create({ userId: userId, status: "present" });
+            return res.json({ success: true });
+        }
+
+        findAttendence.status = "present";
+        await findAttendence.save();
+
+        console.log("Attendence updated");
 
         res.json({ success: true });
     } catch (error) {
