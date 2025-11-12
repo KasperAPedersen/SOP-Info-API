@@ -30,15 +30,20 @@ router.get('/init', async (req, res) => {
 });
 
 router.get('/get/qr', async (req, res) => {
-    if(!qrCodeDataURL || !checkInSecret) {
-        await generateQrCode();
-    }
+    try {
+        if(!qrCodeDataURL || !checkInSecret) {
+            await generateQrCode();
+        }
 
-    res.json({
-        success: true,
-        qrCode: qrCodeDataURL,
-        content: checkInSecret
-    });
+        res.json({
+            success: true,
+            qrCode: qrCodeDataURL,
+            content: checkInSecret
+        });
+    } catch(e) {
+        console.log(e);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
 router.post('/new', async (req, res) => {
