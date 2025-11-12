@@ -13,7 +13,7 @@ router.get('/init', async (req, res) => {
         // make an attendencne for each user
         const users = await models.User.findAll();
         for(const user of users) {
-            await models.Attendence.create({ userId: user.id, status: "present" });
+            await models.Attendence.create({ userId: user.id });
         }
 
         res.json({ success: true });
