@@ -81,7 +81,7 @@ router.post('/new', async (req, res) => {
             username: (await models.User.findByPk(findAttendence.userId)).dataValues.username
         });
 
-        res.json({ success: true });
+        res.json({ success: true, content: "" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Server error" });
