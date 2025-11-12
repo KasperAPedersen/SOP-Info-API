@@ -11,6 +11,7 @@ import UserRoute from './routes/userRoute.js';
 import MessageRoute from './routes/messageRoute.js';
 import AbsenceRoute from './routes/absenceRoute.js';
 import AdminRoute from './routes/adminRoute.js';
+import QrRoute from './routes/qrRoute.js';
 
 const app = Express();
 
@@ -37,6 +38,7 @@ app.use('/user', UserRoute);
 app.use('/message', MessageRoute);
 app.use('/absence', AbsenceRoute);
 app.use('/admin', AdminRoute);
+app.use('/qr', QrRoute);
 
 console.log('\n[INIT]\t\tInitializing');
 const server = http.createServer(app);
