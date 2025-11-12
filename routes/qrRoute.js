@@ -7,7 +7,7 @@ const router = Router();
 
 router.use(Express.json());
 
-router.get('/test', async (req, res) => {
+router.post('/test', async (req, res) => {
     try {
         console.log(req.body)
 
