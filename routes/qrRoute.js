@@ -45,8 +45,10 @@ router.post('/new', async (req, res) => {
         console.log("Attendence updated");
 
         broadcast('attendence', {
+            id: findAttendence.id,
             userId: findAttendence.userId,
             status: findAttendence.status,
+            username: (await models.User.findByPk(findAttendence.userId)).dataValues.username
         });
 
         res.json({ success: true });
