@@ -35,6 +35,8 @@ router.get('/get', async (req, res) => {
             await generateQrCode();
         }
 
+        console.log("QR Code: " + checkInSecret);
+
         res.json({
             success: true,
             qrCode: qrCodeDataURL,
@@ -113,6 +115,8 @@ let generateQrCode = async () => {
     try {
         checkInSecret = crypto.randomBytes(32).toString('hex');
         qrCodeDataURL = await QRCode.toDataURL(checkInSecret);
+
+        console.log("New QR generated:", checkInSecret);
     } catch(e) {
         console.error(e);
     }
