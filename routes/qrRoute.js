@@ -8,6 +8,21 @@ const router = Router();
 
 router.use(Express.json());
 
+router.get('/init', async (req, res) => {
+    try {
+        // make an attendencne for each user
+        const users = await models.User.findAll();
+        for(const user of users) {
+            await models.Attendence.create({ userId: user.id, status: "present" });
+        }
+
+        res.json({ success: true });
+    } catch(e) {
+        console.error(e);
+        res.status(500).json({ error: "Server error" });
+    }
+})
+
 router.post('/new', async (req, res) => {
     try {
         const { userId } = req.body;
