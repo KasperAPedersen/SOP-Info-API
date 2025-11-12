@@ -6,12 +6,12 @@ import { broadcast } from '../socket.js';
 dotenv.config();
 
 const router = Router();
-
 router.use(Express.json());
+
+const secret = "secret";
 
 router.get('/init', async (req, res) => {
     try {
-        // make an attendencne for each user
         const users = await models.User.findAll();
         for(const user of users) {
             await models.Attendence.create({ userId: user.id });
@@ -26,7 +26,11 @@ router.get('/init', async (req, res) => {
 
 router.post('/new', async (req, res) => {
     try {
-        const { userId } = req.body;
+        const { userId, secret } = req.body;
+
+        if(secret != secret) {
+            return res.status(401).json({ error: "Invalid secret" });
+        }
 
         if(userId == null) {
             return res.status(400).json({ error: "Missing required fields" });
@@ -34,7 +38,6 @@ router.post('/new', async (req, res) => {
 
         const findAttendence = await models.Attendence.findOne({ where: { userId: userId } });
         if(!findAttendence) {
-            console.log("No attendence found");
             await models.Attendence.create({ userId: userId, status: "present" });
             return res.json({ success: true });
         }
@@ -42,7 +45,6 @@ router.post('/new', async (req, res) => {
         findAttendence.status = "present";
         await findAttendence.save();
 
-        console.log("Attendence updated");
 
         broadcast('attendence', {
             id: findAttendence.id,
