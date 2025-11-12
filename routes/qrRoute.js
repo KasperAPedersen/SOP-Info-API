@@ -67,6 +67,7 @@ router.post('/new', async (req, res) => {
         findAttendence.status = "present";
         await findAttendence.save();
 
+        await generateQrCode();
 
         broadcast('attendence', {
             id: findAttendence.id,
@@ -74,8 +75,6 @@ router.post('/new', async (req, res) => {
             status: findAttendence.status,
             username: (await models.User.findByPk(findAttendence.userId)).dataValues.username
         });
-
-        await generateQrCode();
 
         res.json({ success: true, content: "" });
     } catch (error) {
