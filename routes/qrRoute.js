@@ -43,6 +43,7 @@ router.get('/reset', async (req, res) => {
                 status: attendence.status,
                 username: (await models.User.findByPk(attendence.userId)).dataValues.username
             });
+            console.log("reset");
         }
 
         await generateQrCode();
