@@ -13,6 +13,7 @@ const router = Router();
 router.use(Express.json());
 
 let checkInSecret = "secret";
+let prevCheckInSecret = "";
 let qrCodeDataURL = "";
 
 router.get('/init', async (req, res) => {
@@ -78,7 +79,7 @@ router.post('/new', async (req, res) => {
     try {
         const { userId, secret } = req.body;
 
-        if(secret !== checkInSecret) {
+        if(secret !== checkInSecret && secret !== prevCheckInSecret) {
             return res.status(401).json({ error: "Invalid secret" });
         }
 
@@ -134,6 +135,7 @@ router.get('/get/all/attendence', async (req, res) => {
 
 let generateQrCode = async () => {
     try {
+        prevCheckInSecret = checkInSecret;
         checkInSecret = crypto.randomBytes(32).toString('hex');
         qrCodeDataURL = await QRCode.toDataURL(checkInSecret);
     } catch(e) {
