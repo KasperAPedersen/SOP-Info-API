@@ -158,7 +158,6 @@ router.get('/get', async (req, res) => {
         }
 
         res.status(200).json({
-            id: attendence.id,
             status: attendence.status
         });
     } catch(e) {
