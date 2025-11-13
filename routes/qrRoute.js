@@ -150,7 +150,7 @@ router.get('/get/all', async (req, res) => {
 
 router.get('/get', async (req, res) => {
     try {
-        const { userId } = req.query;
+        const { userId } = req.body;
         const attendence = await models.Attendence.findOne({ where: { userId: userId } });
 
         if(!attendence) {
