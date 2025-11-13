@@ -67,8 +67,6 @@ router.post('/new', async (req, res) => {
         findAttendence.status = "present";
         await findAttendence.save();
 
-        await generateQrCode();
-
         broadcast('attendence', {
             id: findAttendence.id,
             userId: findAttendence.userId,
@@ -121,6 +119,6 @@ setInterval(async () => {
     broadcast('qr', {
         qrCode: qrCodeDataURL
     });
-}, 1000);
+}, 5000);
 
 export default router;
