@@ -169,6 +169,6 @@ setInterval(async () => {
         qrCode: qrCodeDataURL,
         content: checkInSecret
     });
-}, 1000);
+}, 5000);
 
 export default router;
