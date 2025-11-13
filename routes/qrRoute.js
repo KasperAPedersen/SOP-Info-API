@@ -115,4 +115,13 @@ let generateQrCode = async () => {
     }
 };
 
+setInterval(async () => {
+    generateQrCode();
+
+    broadcast('qr', {
+        qrCode: qrCodeDataURL,
+        content: checkInSecret
+    });
+}, 1000 * 60 * 60);
+
 export default router;
