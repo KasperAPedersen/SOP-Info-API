@@ -30,7 +30,7 @@ router.get('/init', async (req, res) => {
     }
 });
 
-router.get('/reset', async (req, res) => {
+router.get('/reset/qr', async (req, res) => {
     try {
         const all = await models.Attendence.findAll({});
         for(const attendence of all) {
@@ -58,7 +58,7 @@ router.get('/reset', async (req, res) => {
     }
 });
 
-router.get('/get', async (req, res) => {
+router.get('/get/qr', async (req, res) => {
     try {
         if(!qrCodeDataURL || !checkInSecret) {
             await generateQrCode();
@@ -75,7 +75,7 @@ router.get('/get', async (req, res) => {
     }
 });
 
-router.get('/refresh', async (req, res) => {
+router.get('/refresh/qr', async (req, res) => {
    try {
        await generateQrCode();
 
@@ -125,7 +125,7 @@ router.post('/new', async (req, res) => {
     }
 });
 
-router.get('/get/all/attendence', async (req, res) => {
+router.get('/get/all', async (req, res) => {
     try {
         const attendences = await models.Attendence.findAll({
             include: [{
@@ -142,6 +142,25 @@ router.get('/get/all/attendence', async (req, res) => {
         }));
 
         res.status(200).json(formattedAttendences);
+    } catch(e) {
+        console.error(e);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+router.get('/get', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        const attendence = await models.Attendence.findOne({ where: { userId: userId } });
+
+        if(!attendence) {
+            return res.status(404).json({ error: "Attendence not found" });
+        }
+
+        res.status(200).json({
+            id: attendence.id,
+            status: attendence.status
+        });
     } catch(e) {
         console.error(e);
         res.status(500).json({ error: "Server error" });

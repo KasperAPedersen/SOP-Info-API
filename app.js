@@ -38,7 +38,7 @@ app.use('/user', UserRoute);
 app.use('/message', MessageRoute);
 app.use('/absence', AbsenceRoute);
 app.use('/admin', AdminRoute);
-app.use('/qr', QrRoute);
+app.use('/attendence', QrRoute);
 
 console.log('\n[INIT]\t\tInitializing');
 const server = http.createServer(app);
