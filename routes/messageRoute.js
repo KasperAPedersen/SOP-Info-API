@@ -16,6 +16,7 @@ router.post('/new', requireAdmin, async (req, res) => {
         });
 
         broadcast('message', {
+            broadcastType: "message",
             id: newMessage.id,
             author: (await models.User.findByPk(newMessage.dataValues.sender_id)).dataValues.username,
             title: newMessage.title,

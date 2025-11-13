@@ -49,6 +49,7 @@ router.post('/:id/set/status', requireAdmin, async (req, res) => {
         await absence.save();
 
         broadcast('absence', {
+            broadcastType: "absence",
             id: absence.id,
             userId: absence.userId,
             status: absence.status,
@@ -89,6 +90,7 @@ router.post('/new', requireAuth, async (req, res) => {
         });
 
         broadcast('absence', {
+            broadcastType: "absence",
             id: newAbsence.id,
             userId: id,
             status: newAbsence.status,

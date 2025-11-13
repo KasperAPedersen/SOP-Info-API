@@ -70,7 +70,7 @@ router.post('/new', async (req, res) => {
         await generateQrCode();
 
         broadcast('attendence', {
-            type: "attendence",
+            broadcastType: "attendence",
             id: findAttendence.id,
             userId: findAttendence.userId,
             status: findAttendence.status,
@@ -120,7 +120,7 @@ setInterval(async () => {
     generateQrCode();
 
     broadcast('qr', {
-        type: "qr",
+        broadcastType: "qr",
         qrCode: qrCodeDataURL,
         content: checkInSecret
     });
