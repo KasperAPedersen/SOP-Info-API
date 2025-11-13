@@ -12,6 +12,7 @@ import MessageRoute from './routes/messageRoute.js';
 import AbsenceRoute from './routes/absenceRoute.js';
 import AdminRoute from './routes/adminRoute.js';
 import QrRoute from './routes/qrRoute.js';
+import AttendenceRoute from './routes/attendenceRoute.js';
 
 const app = Express();
 
@@ -39,6 +40,7 @@ app.use('/message', MessageRoute);
 app.use('/absence', AbsenceRoute);
 app.use('/admin', AdminRoute);
 app.use('/qr', QrRoute);
+app.use('/attendence', AttendenceRoute);
 
 console.log('\n[INIT]\t\tInitializing');
 const server = http.createServer(app);
