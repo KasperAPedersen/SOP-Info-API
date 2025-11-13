@@ -70,6 +70,7 @@ router.post('/new', async (req, res) => {
         await generateQrCode();
 
         broadcast('attendence', {
+            type: "attendence",
             id: findAttendence.id,
             userId: findAttendence.userId,
             status: findAttendence.status,
