@@ -151,7 +151,6 @@ router.post('/set/consent', requireAuth, async (req, res) => {
     try {
         const { id } = req.user;
         const { consent } = req.body;
-        console.log(req);
 
         const [updated] = await models.User.update({ consent }, { where: { id } });
 
