@@ -119,6 +119,7 @@ setInterval(async () => {
     generateQrCode();
 
     broadcast('qr', {
+        type: "qr"
         qrCode: qrCodeDataURL,
         content: checkInSecret
     });
