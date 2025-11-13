@@ -152,7 +152,10 @@ let generateQrCode = async () => {
     try {
         prevCheckInSecret = checkInSecret;
         checkInSecret = crypto.randomBytes(32).toString('hex');
-        qrCodeDataURL = await QRCode.toDataURL(checkInSecret);
+        qrCodeDataURL = await QRCode.toDataURL(checkInSecret, {
+            width: 230,
+            margin: 0
+        });
     } catch(e) {
         console.error(e);
     }
