@@ -51,8 +51,11 @@ router.get('/reset', async (req, res) => {
             content: checkInSecret
         });
         res.json({ success: true });
-    } catch(e) {}
-};
+    } catch(e) {
+        console.error(e);
+        res.status(500).json({ error: "Server error" });
+    }
+});
 
 router.get('/get', async (req, res) => {
     try {
