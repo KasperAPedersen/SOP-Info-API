@@ -90,7 +90,6 @@ router.post('/new', requireAuth, async (req, res) => {
         });
 
         broadcast('absence', {
-            broadcastType: "absence",
             id: newAbsence.id,
             userId: id,
             status: newAbsence.status,
