@@ -113,8 +113,8 @@ let generateQrCode = async () => {
     }
 };
 
-setInterval(async () => {
-    await generateQrCode();
+setInterval( () => {
+    generateQrCode();
 
     broadcast('qr', {
         success: true,
