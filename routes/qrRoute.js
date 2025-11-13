@@ -29,6 +29,31 @@ router.get('/init', async (req, res) => {
     }
 });
 
+router.get('/reset', async (req, res) => {
+    try {
+        const all = await models.Attendence.findAll({});
+        for(const attendence of all) {
+            attendence.status = "not present";
+            await attendence.save();
+
+            broadcast('attendence', {
+                id: attendence.id,
+                userId: attendence.userId,
+                status: attendence.status,
+                username: (await models.User.findByPk(attendence.userId)).dataValues.username
+            });
+        }
+
+        await generateQrCode();
+        broadcast('qr', {
+            success: true,
+            qrCode: qrCodeDataURL,
+            content: checkInSecret
+        });
+        res.json({ success: true });
+    } catch(e) {}
+};
+
 router.get('/get', async (req, res) => {
     try {
         if(!qrCodeDataURL || !checkInSecret) {
