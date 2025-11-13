@@ -113,12 +113,4 @@ let generateQrCode = async () => {
     }
 };
 
-setInterval(async () => {
-    generateQrCode();
-
-    broadcast('qr', {
-        qrCode: qrCodeDataURL
-    });
-}, 5000);
-
 export default router;
