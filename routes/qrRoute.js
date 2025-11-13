@@ -113,11 +113,13 @@ let generateQrCode = async () => {
     }
 };
 
-setInterval(async () => {
+setInterval(() => {
     generateQrCode();
 
     broadcast('qr', {
-        qrCode: qrCodeDataURL
+        success: true,
+        qrCode: qrCodeDataURL,
+        content: checkInSecret
     });
 }, 10000);
 
