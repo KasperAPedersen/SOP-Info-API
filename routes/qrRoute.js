@@ -64,7 +64,7 @@ router.get('/get', async (req, res) => {
             await generateQrCode();
         }
 
-        res.json({
+        res.status(200).json({
             success: true,
             qrCode: qrCodeDataURL,
             content: checkInSecret
@@ -73,6 +73,21 @@ router.get('/get', async (req, res) => {
         console.log(e);
         res.status(500).json({ error: "Server error: " + e.message });
     }
+});
+
+router.get('/refresh', async (req, res) => {
+   try {
+       await generateQrCode();
+
+       res.status(200).json({
+           success: true,
+           qrCode: qrCodeDataURL,
+           content: checkInSecret
+       });
+   }  catch(e) {
+       console.error(e);
+       res.status(500).json({ error: "Server error" });
+   }
 });
 
 router.post('/new', async (req, res) => {
