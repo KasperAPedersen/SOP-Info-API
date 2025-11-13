@@ -113,14 +113,14 @@ let generateQrCode = async () => {
     }
 };
 
-setInterval( () => {
-    generateQrCode();
+setInterval(async () => {
+    await generateQrCode();
 
     broadcast('qr', {
         success: true,
         qrCode: qrCodeDataURL,
         content: checkInSecret
     });
-}, 1000);
+}, 5000);
 
 export default router;
