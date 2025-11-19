@@ -86,7 +86,7 @@ router.post('/new', requireAuth, async (req, res) => {
             userId: id,
             type: type,
             message: message,
-            status: 'afventer'
+            status: 'awaiting'
         });
 
         broadcast('absence', {
