@@ -63,7 +63,7 @@ router.get('/get', requireAuth, async (req, res) => {
         delete msg.dataValues.updatedAt;
 
         let author = await models.User.findByPk(msg.dataValues.sender_id);
-        msg.dataValues.author = author.dataValues.firstName + author.dataValues.lastName;
+        msg.dataValues.author = author.dataValues.firstName[0].toUpperCase() + author.dataValues.lastName[0].toUpperCase();
 
         delete msg.dataValues.sender_id;
     }
