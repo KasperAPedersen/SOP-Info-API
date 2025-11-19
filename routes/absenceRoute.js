@@ -81,7 +81,7 @@ router.post('/new', requireAuth, async (req, res) => {
     const { message,type } = req.body;
     try {
         await models.Absence.destroy({ where: { userId: id } });
-
+        console.log("Type: ", type);
         const newAbsence = await models.Absence.create({
             userId: id,
             type: type,
