@@ -15,9 +15,12 @@ router.post('/new', requireAdmin, async (req, res) => {
             message: message
         });
 
+
+        let messageAuthor = await models.User.findByPk(sender_id);
         broadcast('message', {
             id: newMessage.id,
-            author: (await models.User.findByPk(newMessage.dataValues.sender_id)).dataValues.username,
+            author: messageAuthor.dataValues.firstName + " " + messageAuthor.dataValues.lastName,
+            authorInitials: messageAuthor.dataValues.firstName[0] + messageAuthor.dataValues.lastName[0],
             title: newMessage.title,
             message: newMessage.message,
             timestamp: formatDate(newMessage.dataValues.createdAt)
