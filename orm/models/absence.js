@@ -16,8 +16,8 @@ let Absence = sequelize.define('absence', {
         }
     },
     status: {
-        type: DataTypes.ENUM('afventer', 'godkendt', 'afvist'),
-        defaultValue: 'afventer'
+        type: DataTypes.ENUM('awaiting', 'approved', 'denied'),
+        defaultValue: 'awaiting'
     },
     message: {
         type: DataTypes.STRING,
