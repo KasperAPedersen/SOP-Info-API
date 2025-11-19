@@ -20,7 +20,7 @@ router.get('/init', async (req, res) => {
     try {
         const users = await models.User.findAll();
         for(const user of users) {
-            await models.Attendence.create({ userId: user.id });
+            await models.Attendance.create({ userId: user.id });
         }
 
         res.json({ success: true });
@@ -32,16 +32,16 @@ router.get('/init', async (req, res) => {
 
 router.get('/reset/qr', async (req, res) => {
     try {
-        const all = await models.Attendence.findAll({});
-        for(const attendence of all) {
-            attendence.status = "not present";
-            await attendence.save();
+        const all = await models.Attendance.findAll({});
+        for(const attendance of all) {
+            attendance.status = "not present";
+            await attendance.save();
 
-            broadcast('attendence', {
-                id: attendence.id,
-                userId: attendence.userId,
-                status: attendence.status,
-                username: (await models.User.findByPk(attendence.userId)).dataValues.username
+            broadcast('attendance', {
+                id: attendance.id,
+                userId: attendance.userId,
+                status: attendance.status,
+                username: (await models.User.findByPk(attendance.userId)).dataValues.username
             });
         }
 
@@ -102,20 +102,20 @@ router.post('/new', async (req, res) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        const findAttendence = await models.Attendence.findOne({ where: { userId: userId } });
-        if(!findAttendence) {
-            await models.Attendence.create({ userId: userId, status: "present" });
+        const findAttendance = await models.Attendance.findOne({ where: { userId: userId } });
+        if(!findAttendance) {
+            await models.Attendance.create({ userId: userId, status: "present" });
             return res.json({ success: true });
         }
 
-        findAttendence.status = "present";
-        await findAttendence.save();
+        findAttendance.status = "present";
+        await findAttendance.save();
 
-        broadcast('attendence', {
-            id: findAttendence.id,
-            userId: findAttendence.userId,
-            status: findAttendence.status,
-            username: (await models.User.findByPk(findAttendence.userId)).dataValues.username
+        broadcast('attendance', {
+            id: findAttendance.id,
+            userId: findAttendance.userId,
+            status: findAttendance.status,
+            username: (await models.User.findByPk(findAttendance.userId)).dataValues.username
         });
 
         res.json({ success: true, content: "" });
@@ -127,7 +127,7 @@ router.post('/new', async (req, res) => {
 
 router.get('/get/all', async (req, res) => {
     try {
-        const attendences = await models.Attendence.findAll({
+        const attendances = await models.Attendance.findAll({
             include: [{
                 model: models.User,
                 as: 'user',
@@ -135,13 +135,13 @@ router.get('/get/all', async (req, res) => {
             }]
         });
 
-        const formattedAttendences = attendences.map(attendence => ({
-            id: attendence.id,
-            user: attendence.user?.username || 'Ukendt',
-            status: attendence.status
+        const formattedAttendances = attendances.map(attendance => ({
+            id: attendance.id,
+            user: attendance.user?.username || 'Ukendt',
+            status: attendance.status
         }));
 
-        res.status(200).json(formattedAttendences);
+        res.status(200).json(formattedAttendances);
     } catch(e) {
         console.error(e);
         res.status(500).json({ error: "Server error" });
@@ -151,14 +151,14 @@ router.get('/get/all', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const { userId } = req.body;
-        const attendence = await models.Attendence.findOne({ where: { userId: userId } });
+        const attendance = await models.Attendance.findOne({ where: { userId: userId } });
 
-        if(!attendence) {
-            return res.status(404).json({ error: "Attendence not found" });
+        if(!attendance) {
+            return res.status(404).json({ error: "Attendance not found" });
         }
 
         res.status(200).json({
-            status: attendence.status
+            status: attendance.status
         });
     } catch(e) {
         console.error(e);

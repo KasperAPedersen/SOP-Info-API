@@ -1,7 +1,7 @@
 import {DataTypes} from 'sequelize';
 import sequelize from '../database.js';
 
-let Attendence = sequelize.define('attendence', {
+let Attendance = sequelize.define('attendance', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -20,15 +20,15 @@ let Attendence = sequelize.define('attendence', {
         defaultValue: 'not present'
     }
 }, {
-    tableName: 'attendence',
+    tableName: 'attendance',
     timestamps: true
 });
 
-Attendence.associate = (models) => {
-    Attendence.belongsTo(models.User, {
+Attendance.associate = (models) => {
+    Attendance.belongsTo(models.User, {
         foreignKey: 'userId',
         as: 'user'
     });
 };
 
-export default Attendence;
+export default Attendance;
