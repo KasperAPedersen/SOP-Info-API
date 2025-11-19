@@ -39,6 +39,7 @@ router.post('/new', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await models.User.create({ username, password: hashedPassword, firstName, lastName });
+        await models.Attendence.create({ userId: newUser.id });
 
         res.status(201).json({ id: newUser.id });
     } catch(e) {
