@@ -17,11 +17,9 @@ const app = Express();
 
 app.use(cors({
     origin: function(origin, callback) {
-        // Tillad requests uden origin (f.eks. mobile apps, curl)
         if (!origin) return callback(null, true);
 
-        // Tillad localhost og dit lokale netværk
-        if (origin.match(/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|app\.local)(:\d+)?$/)) {
+        if (origin.match(/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|172\.\d+\.\d+\.\d+|app\.local)(:\d+)?$/)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -31,6 +29,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(Express.json());
 app.use(morgan("dev"));
 
