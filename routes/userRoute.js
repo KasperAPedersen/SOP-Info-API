@@ -19,7 +19,7 @@ router.get('/init', async (req, res) => {
         if(users.length > 0) return res.json({ success: true });
 
         await models.User.bulkCreate([
-            { username: 'user1', password: await bcrypt.hash('pass1', 10), firstName: 'Johnny', lastName: 'Doe', consent: true },
+            { username: 'user1', password: await bcrypt.hash('pass1', 10), firstName: 'Johnny', lastName: 'Doe', consent: true, admin: true },
             { username: 'user2', password: await bcrypt.hash('pass2', 10), firstName: 'Jane', lastName: 'Smith', consent: false }
         ]);
 
