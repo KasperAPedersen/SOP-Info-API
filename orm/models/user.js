@@ -29,6 +29,11 @@ let User = sequelize.define('user', {
         allowNull: false,
         defaultValue: false
     },
+    firstLogin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
     admin: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
