@@ -166,6 +166,24 @@ router.post('/set/consent', requireAuth, async (req, res) => {
     }
 });
 
+router.post('/set/firstLogin', requireAuth, async (req, res) => {
+    try {
+        const { id } = req.user;
+        const { isFirst } = req.body;
+
+        const [updated] = await models.User.update({ firstLogin: isFirst }, { where: { id } });
+
+        if (updated) {
+            res.json({ success: true });
+        } else {
+            res.status(404).json({ error: "User not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 router.post('/set/password', requireAuth, async (req, res) => {
     try {
         const { id } = req.user;
