@@ -4,9 +4,32 @@ import { broadcast } from '../socket.js';
 import { requireAdmin, requireAuth } from '../middleware/auth.js';
 
 const router = Router();
-
 router.use(Express.json());
 
+/**
+ * @openapi
+ * /absence/get/all:
+ *   get:
+ *     summary: Hent alle fraværsindberetninger
+ *     description: Admin-only endpoint. Returnerer alle registrerede fravær.
+ *     tags:
+ *       - Absence
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste af fravær
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Absence'
+ *       401:
+ *         description: Ikke autoriseret (admin kræves)
+ *       500:
+ *         description: Serverfejl
+ */
 router.get('/get/all', requireAdmin, async (req, res) => {
     try {
         const absences = await models.Absence.findAll({
@@ -35,6 +58,40 @@ router.get('/get/all', requireAdmin, async (req, res) => {
     }
 });
 
+/**
+ * @openapi
+ * /absence/{id}/set/status:
+ *   post:
+ *     summary: Opdater status på en fraværsindberetning
+ *     tags:
+ *       - Absence
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID på fravær
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [awaiting, approved, denied]
+ *     responses:
+ *       200:
+ *         description: Status opdateret
+ *       400:
+ *         description: Forkert input
+ *       404:
+ *         description: Fravær ikke fundet
+ */
 router.post('/:id/set/status', requireAdmin, async (req, res) => {
     try {
         const id = parseInt(req.params.id);
@@ -64,6 +121,25 @@ router.post('/:id/set/status', requireAdmin, async (req, res) => {
     }
 });
 
+/**
+ * @openapi
+ * /absence/get:
+ *   get:
+ *     summary: Hent dit eget fravær
+ *     tags:
+ *       - Absence
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Dit fravær
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Absence'
+ *       404:
+ *         description: Intet fravær fundet
+ */
 router.get('/get', requireAuth, async (req, res) => {
     const { id } = req.user;
     const absence = await models.Absence.findOne({
@@ -76,12 +152,40 @@ router.get('/get', requireAuth, async (req, res) => {
     res.json(absence);
 });
 
+/**
+ * @openapi
+ * /absence/new:
+ *   post:
+ *     summary: Opret et nyt fravær
+ *     description: Overwrites existing absence for the user.
+ *     tags:
+ *       - Absence
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *                 enum: [sick, other]
+ *     responses:
+ *       201:
+ *         description: Fravær oprettet
+ *       400:
+ *         description: Fejl i oprettelse
+ */
 router.post('/new', requireAuth, async (req, res) => {
     const { id } = req.user;
-    const { message,type } = req.body;
+    const { message, type } = req.body;
     try {
         await models.Absence.destroy({ where: { userId: id } });
-        console.log("Type: ", type);
+
         const newAbsence = await models.Absence.create({
             userId: id,
             type: type,
@@ -105,5 +209,3 @@ router.post('/new', requireAuth, async (req, res) => {
 });
 
 export default router;
-
-

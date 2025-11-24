@@ -2,13 +2,55 @@ import Express, { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
-
 import models from '../orm/models.js';
 
 dotenv.config();
 
 const router = Router();
 
+/**
+ * @openapi
+ * /admin/authenticate:
+ *   post:
+ *     summary: Log ind som admin
+ *     description: Autentificerer en bruger og returnerer JWT-token. Kun admin-brugere tilladt.
+ *     tags:
+ *       - Admin
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: admin
+ *               password:
+ *                 type: string
+ *                 example: "secret123"
+ *     responses:
+ *       200:
+ *         description: Login succesfuld, returnerer token + brugerdata
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token
+ *                 user:
+ *                   type: object
+ *                   description: Brugerdata uden password
+ *       401:
+ *         description: Bruger ikke fundet, forkert password eller ikke admin
+ *       500:
+ *         description: Serverfejl
+ */
 router.post('/authenticate', async (req, res) => {
     try {
         const { username, password } = req.body;

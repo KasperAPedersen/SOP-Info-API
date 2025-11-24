@@ -6,6 +6,7 @@ import cors from 'cors';
 
 dotenv.config();
 
+import { setupSwagger } from "./swagger.js";
 import { initWebSocket } from './socket.js';
 import UserRoute from './routes/userRoute.js';
 import MessageRoute from './routes/messageRoute.js';
@@ -14,6 +15,7 @@ import AdminRoute from './routes/adminRoute.js';
 import QrRoute from './routes/qrRoute.js';
 
 const app = Express();
+setupSwagger(app);
 
 app.use(cors({
     origin: function(origin, callback) {
